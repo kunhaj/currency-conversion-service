@@ -4,12 +4,6 @@ pipeline {
  
     stages {
         
-        stage("Git Clone"){
-            steps {
-               git 'https://github.com/kunhaj/currency-conversion-service.git'
-            }   
-        }
-        
         stage('Build') {
             steps {
                 sh "mvn -DskipTests=true spring-boot:build-image"
