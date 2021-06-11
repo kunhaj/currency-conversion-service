@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+ 
+    stages {
+        
+        stage("Git Clone"){
+            steps {
+               git 'https://github.com/kunhaj/currency-conversion-service.git'
+            }   
+        }
+        
+        stage('Build') {
+            steps {
+                sh "mvn -DskipTests=true spring-boot:build-image"
+            }
+           
+        }
+        stage('Docker Login') {
+            steps {
+                withCredentials([string(credentialsId: 'DOCKER_PASS', variable: 'PASSWORD')]) {
+                        sh 'docker login -u kunhaj -p $PASSWORD'
+                }
+            }   
+            
+        }
+        stage("Docker Push"){
+            steps {
+                sh 'docker push kunhaj/mmv2-currency-conversion-service:0.0.11-SNAPSHOT'
+            }    
+        }
+        
+    }
+}
